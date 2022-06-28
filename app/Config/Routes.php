@@ -163,6 +163,10 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], function ($routes)
         $routes->post('pengajuan/(:any)', 'Admin::getRowPengajuan/$1');
         $routes->post('approval/(:any)', 'Admin::getRowApproval/$1');
     });
+
+    $routes->group('get', ['namespace' => 'App\Controllers\Api'], function ($routes) {
+        $routes->get('approval', 'Admin::getApprovalUser');
+    });
 });
 
 /*

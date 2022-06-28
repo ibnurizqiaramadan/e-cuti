@@ -86,41 +86,68 @@ body {
 } */
 </style>
 
+<?php
+
+
+
+?>
+
 <body class="page">
-    <h5 class="text-center text-bold">FORMULIR PERMINTAAN DAN PEMBERIAN CUTI</h5>
+
+    <div class="row">
+        <div class="col-7"></div>
+        <div class="col-5 d-flex justify-content-end">
+            <table>
+                <tr>
+                    <td colspan="2" class="text-center">Jakarta, <?= date('d M Y') ?></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="text-center pt-2">Kepada</td>
+                </tr>
+                <tr>
+                    <td style="vertical-align: text-top;">Yth. </td>
+                    <td><?= $approval3['jabatan']['nama'] ?></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="text-center">di Jakarta</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <h5 class="text-center text-bold mt-4">FORMULIR PERMINTAAN DAN PEMBERIAN CUTI</h5>
     <table class="no-tanggal text-bold">
         <tr>
             <td class="fw-bold">Nomor</td>
             <td class="px-3">:</td>
-            <td>E - 0099</td>
+            <td>E - <?= $nomorPengajuan ?></td>
         </tr>
         <tr>
             <td>Tanggal</td>
             <td class="px-3">:</td>
-            <td>20-12-2022</td>
+            <td><?= date('d F Y', strtotime($data->pengajuan_dibuat)) ?></td>
         </tr>
     </table>
 
     <table class="border mt-3 w-100 table-data-pegawai">
         <tr>
-            <td colspan="3">I. DATA PEGAWAI</td>
-            <td></td>
+            <td colspan="4">I. DATA PEGAWAI</td>
         </tr>
         <tr>
             <td>Nama</td>
-            <td>Ibnu Rizqia Ramadan</td>
+            <td><?= $data->nama ?></td>
             <td>NIP</td>
-            <td>123321</td>
+            <td><?= $data->nip ?></td>
         </tr>
         <tr>
             <td>Jabatan</td>
-            <td>Ka Satlak Kec Sawah Besar</td>
+            <td><?= $jabatan->nama ?></td>
             <td>Masa Kerja</td>
-            <td>11 Tahun 5 Bulan</td>
+            <td><?= $masaKerja ?></td>
         </tr>
         <tr>
             <td>Unit Kerja</td>
-            <td colspan="3">Suku Dinas Ketahanan Pangan, Kelautan dan Pertanian Kota Administrasi Jakarta Pusat</td>
+            <td colspan="3"><?= $unitKerja->nama ?></td>
         </tr>
     </table>
 
@@ -131,26 +158,26 @@ body {
         <tr>
             <td class="cuti-nomor">1.</td>
             <td>Cuti Tahunan</td>
-            <td class="text-center check-cuti">-</td>
+            <td class="text-center check-cuti"><?= $data->jenis_cuti == 0 ? '&check;' : '-' ?></td>
             <td class="cuti-nomor">2.</td>
             <td>Cuti Besar</td>
-            <td class="text-center check-cuti">-</td>
+            <td class="text-center check-cuti"><?= $data->jenis_cuti == 1 ? '&check;' : '-' ?></td>
         </tr>
         <tr>
             <td class="cuti-nomor">3.</td>
             <td>Cuti Sakit</td>
-            <td class="text-center check-cuti">-</td>
+            <td class="text-center check-cuti"><?= $data->jenis_cuti == 2 ? '&check;' : '-' ?></td>
             <td class="cuti-nomor">4.</td>
             <td>Cuti Melahirkan</td>
-            <td class="text-center check-cuti">-</td>
+            <td class="text-center check-cuti"><?= $data->jenis_cuti == 3 ? '&check;' : '-' ?></td>
         </tr>
         <tr>
             <td class="cuti-nomor">5.</td>
             <td>Cuti Karena Alasan Penting</td>
-            <td class="text-center check-cuti">&check;</td>
+            <td class="text-center check-cuti"><?= $data->jenis_cuti == 4 ? '&check;' : '-' ?></td>
             <td class="cuti-nomor">6.</td>
             <td>Cuti di Luar Tanggungan Negara</td>
-            <td class="text-center check-cuti">-</td>
+            <td class="text-center check-cuti"><?= $data->jenis_cuti == 5 ? '&check;' : '-' ?></td>
         </tr>
     </table>
 
@@ -159,7 +186,7 @@ body {
             <td>III. ALASAN CUTI</td>
         </tr>
         <tr>
-            <td class="pb-3">Alasan untuk cuti</td>
+            <td class="pb-3"><?= $data->alasan ?></td>
         </tr>
     </table>
 
@@ -169,8 +196,10 @@ body {
             <td colspan="2">IV. LAMANYA CUTI</td>
         </tr>
         <tr>
-            <td class="p-2 text-center w-50">Selama 5 Hari</td>
-            <td class="p-2 text-center w-50">Tanggal 27 Juli s.d 2 Agustus 2021 </td>
+            <td class="p-2 text-center w-50">Selama <?= $data->lama ?> Hari</td>
+            <td class="p-2 text-center w-50">Tanggal <?= date('d F', strtotime($data->tgl_mulai)) ?> s.d
+                <?= date('d F Y', strtotime($data->tgl_selesai)) ?>
+            </td>
         </tr>
     </table>
 
@@ -183,7 +212,7 @@ body {
             <td class="text-center">&check;</td>
             <td class="cuti-nomor">2.</td>
             <td>CUTI BESAR</td>
-            <td class="text-center check-cuti">5</td>
+            <td class="text-center check-cuti"><?= $jmlCuti['cuti_besar'] ?></td>
         </tr>
 
         <tr>
@@ -192,32 +221,32 @@ body {
             <td class="text-center">Keterangan</td>
             <td class="cuti-nomor">3.</td>
             <td>CUTI SAKIT</td>
-            <td class="text-center check-cuti">-</td>
+            <td class="text-center check-cuti"><?= $jmlCuti['cuti_sakit'] ?></td>
         </tr>
 
         <tr>
-            <td class="text-center">2019</td>
-            <td class="text-center">-</td>
+            <td class="text-center"><?= date('Y') - 2 ?></td>
+            <td class="text-center"><?= getSisaJatahTahunan(date('Y') - 2, $data->user_id) ?></td>
             <td class="text-center">-</td>
             <td class="cuti-nomor">4.</td>
             <td>CUTI MELAHIRKAN</td>
-            <td class="text-center check-cuti">-</td>
+            <td class="text-center check-cuti"><?= $jmlCuti['cuti_melahirkan'] ?></td>
         </tr>
         <tr>
-            <td class="text-center">2020</td>
-            <td class="text-center">-</td>
+            <td class="text-center"><?= date('Y') - 1 ?></td>
+            <td class="text-center"><?= getSisaJatahTahunan(date('Y') - 1, $data->user_id) ?></td>
             <td class="text-center">-</td>
             <td class="cuti-nomor">5.</td>
             <td>CUTI KARENA ALASAN PENTING</td>
-            <td class="text-center check-cuti">-</td>
+            <td class="text-center check-cuti"><?= $jmlCuti['cuti_alasan_penting'] ?></td>
         </tr>
         <tr>
-            <td class="text-center">2021</td>
-            <td class="text-center">-</td>
+            <td class="text-center"><?= date('Y') ?></td>
+            <td class="text-center"><?= getJatahTahunan($data->user_id) ?> </td>
             <td class="text-center">-</td>
             <td class="cuti-nomor">6.</td>
             <td>CUTI DI LUAR TANGGUNGAN NEGARA</td>
-            <td class="text-center check-cuti">-</td>
+            <td class="text-center check-cuti"><?= $jmlCuti['cuti_tanggungan'] ?></td>
         </tr>
 
     </table>
@@ -227,17 +256,15 @@ body {
             <td colspan="3">VI. ALAMAT SELAMA MENJALANKAN CUTI</td>
         </tr>
         <tr>
-            <td rowspan="2" style="width: 500px"> Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Exercitationem minus error adipisci cum tenetur aperiam quo delectus provident facilis neque, rerum sed
-                numquam quisquam minima deleniti voluptate assumenda atque dolorum? </td>
+            <td rowspan="2" style="width: 500px; vertical-align: text-top;"> <?= $data->alamat_cuti ?> </td>
             <td>TELP.</td>
-            <td>081932327997</td>
+            <td><?= $data->kontak ?></td>
         </tr>
         <tr>
             <td colspan="2" class="text-center">
                 Hormat Saya,
-                <p class="mt-5 m-0">Ibnu Rizqia Ramadan</p>
-                <p class="m-0">NIP 197006191996031003</p>
+                <p class="mt-5 m-0"><?= $data->nama ?></p>
+                <p class="m-0">NIP <?= $data->nip ?></p>
             </td>
         </tr>
     </table>
@@ -261,21 +288,12 @@ body {
         <tr style="border: 0;">
             <td colspan="2" class="w-50">&nbsp;</td>
             <td colspan="2" class="w-50 text-center">
-                Kepala Sub Bagian Tata Usaha
+                <?= $approval2['jabatan']['nama'] ?>
                 <p class="m-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="198" height="98">
-                        <g fill="none">
-                            <rect x="0" y="0" width="198" height="98" />
-                            <g fill="none" stroke="#000000" stroke-width="2">
-                                <polyline
-                                    points="85,42 85,41 86,40 87,38 87,37 89,34 90,30 90,27 90,25 90,23 90,22 90,21 91,21 91,22 92,23 94,26 95,30 96,33 97,36 99,39 99,42 99,44 100,45 100,47 100,48 100,49 101,51 101,52 101,54 102,56 102,58 102,62 102,64 102,66 102,69 102,71 102,74 102,76 102,78 102,79 101,81 101,82 100,83 99,84 97,86 96,87 94,87 93,87 91,88 89,88 88,88 87,88 86,88 85,87 84,86 81,83 81,81 81,79 81,75 81,73 82,69 83,66 84,64 85,63 87,60 89,58 91,55 94,53 97,49 100,45 102,42 103,38 105,34 106,30 107,27 107,23 107,20 107,17 107,18 104,22 101,31 100,38 100,43 101,46 101,47 102,47 105,47 108,47 114,46 115,46 115,48 112,51 110,53 110,54 115,54 119,53 119,54 119,55 119,57" />
-                                <polyline points="114,67 115,66 118,65 121,63 131,62 136,60 137,59" />
-                            </g>
-                        </g>
-                    </svg>
+                    <?= $approval2['signature'] ?>
                 </p>
-                <p class="m-0">Muhamad Amin</p>
-                <p class="m-0">NIP 197006191996031003</p>
+                <p class="m-0"><?= $approval2['user']['nama'] ?></p>
+                <p class="m-0">NIP <?= $approval2['user']['nip'] ?></p>
             </td>
         </tr>
     </table>
@@ -299,21 +317,12 @@ body {
         <tr style="border: 0;">
             <td colspan="2" class="w-50" style="border: 0;">&nbsp;</td>
             <td colspan="2" class="w-50 text-center">
-                Kepala Suku Dinas Ketahanan Pangan, Kelautan dan Pertanian Kota Administrasi Jakarta Pusat
+                <?= $approval3['jabatan']['nama'] ?>
                 <p class="m-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="198" height="98">
-                        <g fill="none">
-                            <rect x="0" y="0" width="198" height="98" />
-                            <g fill="none" stroke="#000000" stroke-width="2">
-                                <polyline
-                                    points="85,42 85,41 86,40 87,38 87,37 89,34 90,30 90,27 90,25 90,23 90,22 90,21 91,21 91,22 92,23 94,26 95,30 96,33 97,36 99,39 99,42 99,44 100,45 100,47 100,48 100,49 101,51 101,52 101,54 102,56 102,58 102,62 102,64 102,66 102,69 102,71 102,74 102,76 102,78 102,79 101,81 101,82 100,83 99,84 97,86 96,87 94,87 93,87 91,88 89,88 88,88 87,88 86,88 85,87 84,86 81,83 81,81 81,79 81,75 81,73 82,69 83,66 84,64 85,63 87,60 89,58 91,55 94,53 97,49 100,45 102,42 103,38 105,34 106,30 107,27 107,23 107,20 107,17 107,18 104,22 101,31 100,38 100,43 101,46 101,47 102,47 105,47 108,47 114,46 115,46 115,48 112,51 110,53 110,54 115,54 119,53 119,54 119,55 119,57" />
-                                <polyline points="114,67 115,66 118,65 121,63 131,62 136,60 137,59" />
-                            </g>
-                        </g>
-                    </svg>
+                    <?= $approval3['signature'] ?>
                 </p>
-                <p class="m-0">Muhamad Amin</p>
-                <p class="m-0">NIP 197006191996031003</p>
+                <p class="m-0"><?= $approval3['user']['nama'] ?></p>
+                <p class="m-0">NIP <?= $approval3['user']['nip'] ?></p>
             </td>
         </tr>
     </table>

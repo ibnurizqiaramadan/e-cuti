@@ -13,8 +13,7 @@ function addFormInformasiUmum() {
                 2: "Sakit",
                 3: "Melahirkan",
                 4: "Karna Alasan Penting",
-                5: "Bersama",
-                6: "Diluar Tanggungan Negara",
+                5: "Diluar Tanggungan Negara",
             },
         },
         {
@@ -72,58 +71,22 @@ function addFormApproval() {
     clearFormInput("#formApproval");
     addFormInput("#formApproval", [
         {
-            type: "select2",
+            type: "text",
             name: "approval_1",
+            attr: "disabled",
             label: "Approval 1",
-            api: {
-                url: API_PATH + "data/options/users",
-                option: {
-                    value: "id",
-                    caption: "{nip} - {nama}",
-                },
-                where: {
-                    level: 1,
-                },
-                order: {
-                    nama: "asc",
-                },
-            },
         },
         {
-            type: "select2",
+            type: "text",
             name: "approval_2",
-            label: "Approval Atasan",
-            api: {
-                url: API_PATH + "data/options/users",
-                option: {
-                    value: "id",
-                    caption: "{nip} - {nama}",
-                },
-                where: {
-                    level: 1,
-                },
-                order: {
-                    nama: "asc",
-                },
-            },
+            attr: "disabled",
+            label: "Approval 2",
         },
         {
-            type: "select2",
-            name: "approval_3",
-            label: "Approval Pejabat Berwenang",
-            api: {
-                url: API_PATH + "data/options/users",
-                option: {
-                    value: "id",
-                    caption: "{nip} - {nama}",
-                },
-                where: {
-                    level: 1,
-                },
-                order: {
-                    nama: "asc",
-                },
-            },
+            type: "text",
+            name: "approval_2",
+            attr: "disabled",
+            label: "Approval 2",
         },
     ]);
 }
@@ -135,6 +98,26 @@ $(document).ready(function () {
     addFormDokumenPendukung();
     addFormApproval();
     $("#formInput").attr("action", CURRENT_PATH + "store");
+    $.ajax({
+        url: `${API_PATH}get/approval`,
+        type: "get",
+        processData: !1,
+        contentType: !1,
+        cache: !1,
+        dataType: "JSON",
+        beforeSend: function () {
+            disableButton();
+        },
+        complete: function () {
+            enableButton();
+        },
+        success: function (e) {
+            fillForm(e);
+        },
+        error: function (err) {
+            errorCode(err);
+        },
+    });
 });
 
 $(`#formInput`).submit(function (e) {

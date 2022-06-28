@@ -133,6 +133,20 @@ function Delete($table, $where, $json = false)
     }
 }
 
+function getSisaJatahTahunan($tahun, $userId)
+{
+    $CI = new db();
+    // echo $tahun . " | " . $userId;
+    return $CI->db->table('cuti_tahunan')->where(['tahun' => $tahun, 'user_id' => $userId])->get()->getRow()->sisa ?? '-';
+}
+
+function getJatahTahunan($userId)
+{
+    $CI = new db();
+    // echo $tahun . " | " . $userId;
+    return $CI->db->table('users')->where(['id' => $userId])->get()->getRow()->cuti_tahun_jatah ?? '-';
+}
+
 /**
  * Validate.
  */

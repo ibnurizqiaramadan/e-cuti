@@ -58,22 +58,29 @@ class PengajuanCuti extends BaseController
                 'tgl_selesai' => 'required|date',
                 'alamat_cuti' => 'required',
                 'kontak' => 'required|number',
-                'approval_1' => 'required',
-                'approval_2' => 'required',
-                'approval_3' => 'required',
             ], [
                 'user_id' => session('userId'),
-                'approval_1' => false,
-                'approval_2' => false,
-                'approval_3' => false,
                 'lama' => count(getBetweenDates(Input_('tgl_mulai'), Input_('tgl_selesai')))
             ]);
+
+            $lamaCuti = count(getBetweenDates(Input_('tgl_mulai'), Input_('tgl_selesai')));
 
             $tglMulai = date('Y-m-d', strtotime(Input_('tgl_mulai')));
             $tglSelesai = date('Y-m-d', strtotime(Input_('tgl_selesai')));
 
+
             if ($tglMulai > $tglSelesai) {
                 $validate = ValidateAdd($validate, 'tgl_selesai', 'Tanggal Selesai tidak boleh kurang dari tanggal mulai');
+            }
+
+            $batasCutiTahunan = Where('users', ['id' => session('userId')])['cuti_tahun_jatah'];
+
+            $sisaCuti = $batasCutiTahunan - $lamaCuti;
+
+            if (Input_('jenis_cuti') == "0") {
+                if ($lamaCuti > $batasCutiTahunan) {
+                    $validate = ValidateAdd($validate, 'tgl_selesai', "$lamaCuti hari melebihi dari $batasCutiTahunan hari jatah cuti tahunan");
+                }
             }
 
             if (!$validate['success']) throw new \Exception("Isi form dengan benar");
@@ -81,19 +88,25 @@ class PengajuanCuti extends BaseController
             if (!Create($this->table, $validate['data'])) throw new \Exception("Gagal mengirim pengajuan");
 
             $pengajuanId = $this->db->insertID();
-            foreach ($_REQUEST as $key => $value) {
-                if (substr($key, 0, 9) == 'approval_') {
-                    $approval[] = [
-                        'urut' => substr($key, 9, 1),
-                        'pengajuan_id' => $pengajuanId,
-                        'user_id' => $this->db->table('users')->select('id')->where([EncKey('id') => $value])->get()->getRow()->id
-                    ];
-                }
+
+            $userApproval = $this->db->table('users')->select('approval_1, approval_2, approval_3')->where(['id' => session('userId')])->get()->getRow();
+
+            $_approval[] = $userApproval->approval_1;
+            $_approval[] = $userApproval->approval_2;
+            $_approval[] = $userApproval->approval_3;
+
+            foreach ($_approval as $key => $value) {
+                $approval[] = [
+                    'urut' => $key + 1,
+                    'pengajuan_id' => $pengajuanId,
+                    'user_id' => $this->db->table('users')->select('id')->where([EncKey('id') => $value])->get()->getRow()->id
+                ];
             }
 
             // Print_($approval, true);
 
             if (!Create('approval_pengajuan', $approval)) throw new \Exception("Gagal menambah approval");
+            Update('users', ['cuti_tahun_jatah' => $sisaCuti], ['id' => session('userId')]);
 
             $message = [
                 'status' => 'ok',
@@ -158,16 +171,60 @@ class PengajuanCuti extends BaseController
     public function printPengajuan($id)
     {
         $pengajuanData = $this->db->table($this->table . ' pe')
-            ->select('u.nama, u.nip, pe.approval')
+            ->select('u.nama, u.nip, u.tahun_masuk, u.approval_1, u.approval_2, u.approval_3, pe.*, pe.created_at pengajuan_dibuat, u.jabatan_id, u.unit_kerja_id, u.id user_id')
             ->join('users u', 'u.id = pe.user_id')
             ->where([EncKey('pe.id') => $id])->get()->getRow();
+
         $nama = $pengajuanData->nama ?? "-";
-        $nip = $pengajuanData->nip ?? "-";
+        $jabatan = (object) Where('jabatan', ['id' => $pengajuanData->jabatan_id]);
+        $unitKerja = (object) Where('unit_kerja', ['id' => $pengajuanData->unit_kerja_id]);
+
+        $approve2 = Where('approval_pengajuan', ['urut' => '2', 'pengajuan_id' => $pengajuanData->id]);
+        $approve2User = Where('users', ['id' => $approve2['user_id']]);
+        $approve2Jabatan = Where('jabatan', ['id' => $approve2User['jabatan_id']]);
+        $approval2['signature'] = $approve2['signature'];
+        $approval2['user'] = $approve2User;
+        $approval2['jabatan'] = $approve2Jabatan;
+
+        $approve3 = Where('approval_pengajuan', ['urut' => '3', 'pengajuan_id' => $pengajuanData->id]);
+        $approve3User = Where('users', ['id' => $approve3['user_id']]);
+        $approve3Jabatan = Where('jabatan', ['id' => $approve3User['jabatan_id']]);
+        $approval3['signature'] = $approve3['signature'];
+        $approval3['user'] = $approve3User;
+        $approval3['jabatan'] = $approve3Jabatan;
+
+        $jmlCuti['cuti_besar'] = $this->db->table('pengajuan')->select('SUM(lama) jml')->where(['jenis_cuti' => '1', 'approval' => '1', 'user_id' => session('userId')])->get()->getRow()->jml ?? '-';
+        $jmlCuti['cuti_sakit'] = $this->db->table('pengajuan')->select('SUM(lama) jml')->where(['jenis_cuti' => '2', 'approval' => '1', 'user_id' => session('userId')])->get()->getRow()->jml ?? '-';
+        $jmlCuti['cuti_melahirkan'] = $this->db->table('pengajuan')->select('SUM(lama) jml')->where(['jenis_cuti' => '3', 'approval' => '1', 'user_id' => session('userId')])->get()->getRow()->jml ?? '-';
+        $jmlCuti['cuti_alasan_penting'] = $this->db->table('pengajuan')->select('SUM(lama) jml')->where(['jenis_cuti' => '4', 'approval' => '1', 'user_id' => session('userId')])->get()->getRow()->jml ?? '-';
+        $jmlCuti['cuti_tanggungan'] = $this->db->table('pengajuan')->select('SUM(lama) jml')->where(['jenis_cuti' => '5', 'approval' => '1', 'user_id' => session('userId')])->get()->getRow()->jml ?? '-';
+
+        $days = count(getBetweenDates($pengajuanData->tahun_masuk, date('Y-m-d')));
+
+        $start_date = new \DateTime();
+        $end_date = (new $start_date)->add(new \DateInterval("P{$days}D"));
+        $dd = date_diff($start_date, $end_date);
+        $masaKerja = $dd->y . " Tahun " . $dd->m . " Bulan ";
+
+        $nomorPengajuan = '0000';
+        $nomorPengajuan = substr($nomorPengajuan, 0, strlen($nomorPengajuan) - strlen($pengajuanData->id)) . $pengajuanData->id;
+
+
+        // Print_($pengajuanData, false, false);
+        // Print_($jmlCuti, false, false);
+        // Print_($masaKerja, false, false);
+        // Print_($approval2, false, false);
+        // Print_($approval3, false, false);
         $data = [
             'title' => "Print Pengajuan $nama",
-            'pengajuanId' => $id,
-            'nama' => $nama,
-            'nip' => $nip
+            'data' => $pengajuanData,
+            'jabatan' => $jabatan,
+            'nomorPengajuan' => $nomorPengajuan,
+            'masaKerja' => $masaKerja,
+            'unitKerja' => $unitKerja,
+            'approval2' => $approval2,
+            'approval3' => $approval3,
+            'jmlCuti' => $jmlCuti
         ];
 
         if ($pengajuanData->approval != '1') return "Belum tersedia";

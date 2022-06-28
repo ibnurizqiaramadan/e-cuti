@@ -42,6 +42,7 @@ class Karyawan extends BaseController
                 'unit_kerja_id' => 'required',
                 'level' => 'required|number',
                 'tahun_masuk' => 'required|date',
+                'cuti_tahun_jatah' => 'required|number|max:2',
                 'approval_1' => '',
                 'approval_2' => '',
                 'approval_3' => '',
@@ -49,6 +50,11 @@ class Karyawan extends BaseController
 
             $user = $this->db->table($this->table)->where('email', Input_('email'))->get()->getRow();
             if ($user) $validate = ValidateAdd($validate, 'email', 'Email ada yang sama');
+
+            if (Input_('cuti_tahun_jatah') > 12) {
+                $validate = ValidateAdd($validate, 'cuti_tahun_jatah', "Tidak boleh lebih dari 12 hari !");
+            }
+
             if (!$validate['success']) throw new \Exception("Error Processing Request");
             $idJabatan = $this->db->table('jabatan')->select('id')->where([EncKey('id') => Input_('jabatan_id')])->get()->getRow()->id;
             $idUnitKerja = $this->db->table('unit_kerja')->select('id')->where([EncKey('id') => Input_('unit_kerja_id')])->get()->getRow()->id;
@@ -88,10 +94,14 @@ class Karyawan extends BaseController
                 'unit_kerja_id' => 'required',
                 'level' => 'required|number',
                 'tahun_masuk' => 'required|date',
+                'cuti_tahun_jatah' => 'required|number|max:2',
                 'approval_1' => '',
                 'approval_2' => '',
                 'approval_3' => '',
             ]);
+            if (Input_('cuti_tahun_jatah') > 12) {
+                $validate = ValidateAdd($validate, 'cuti_tahun_jatah', "Tidak boleh lebih dari 12 hari !");
+            }
             if (!$validate['success']) throw new \Exception("Error Processing Request");
             $idJabatan = $this->db->table('jabatan')->select('id')->where([EncKey('id') => Input_('jabatan_id')])->get()->getRow()->id;
             $idUnitKerja = $this->db->table('unit_kerja')->select('id')->where([EncKey('id') => Input_('unit_kerja_id')])->get()->getRow()->id;

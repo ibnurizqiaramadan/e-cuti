@@ -266,6 +266,11 @@ $(document).ready(function () {
                         label: "Tahun Masuk",
                     },
                     {
+                        type: "number",
+                        name: "cuti_tahun_jatah",
+                        label: "Jatah Cuti Tahunan",
+                    },
+                    {
                         type: "select2",
                         name: "approval_1",
                         label: "Approval 1",
@@ -440,6 +445,11 @@ $(document).ready(function () {
                 type: "date",
                 name: "tahun_masuk",
                 label: "Tahun Masuk",
+            },
+            {
+                type: "number",
+                name: "cuti_tahun_jatah",
+                label: "Jatah Cuti Tahunan",
             },
             {
                 type: "select2",
