@@ -1,0 +1,32 @@
+.row-selected {
+    background-color: rgb(242, 242, 242);
+}
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f4f6f9;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #999;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #343a40;
+}
+
+.loadingGan .bar {
+    background: #4f92ff;
+}
+
+.merah {
+    color: red;
+}
+
+.logo-app {
+    height: 80px;
+    width: 80px;
+}
