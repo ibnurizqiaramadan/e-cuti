@@ -46,16 +46,16 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 col-lg-4">
-                <div class="card mb-0">
-                    <div class="card-header">Dokumen Pendukung</div>
-                    <div class="card-body" id="formDokumenPendukung">
+    </form>
+    <div class="col-md-12 col-lg-4">
+        <div class="card mb-0">
+            <div class="card-header">Dokumen Pendukung</div>
+            <div class="card-body" id="formDokumenPendukung">
 
-                    </div>
-                </div>
             </div>
         </div>
-    </form>
+    </div>
+</div>
 
 </div>
 

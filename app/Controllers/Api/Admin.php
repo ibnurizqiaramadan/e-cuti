@@ -240,6 +240,12 @@ class Admin extends BaseController
 
     public function dataPengajuan()
     {
+        $whereData = ['pe.user_id' => session('userId')];
+
+        if (session('level') == 2) {
+            $whereData = [];
+        }
+
         return $this->dataTables([
             'table' => 'pengajuan pe',
             'selectData' => 'pe.id, u.nama, u.nip, pe.tgl_mulai, pe.tgl_selesai, pe.jenis_cuti, pe.file_lampiran, pe.approval, pe.lama, pe.alasan, pe.alamat_cuti',
@@ -249,9 +255,7 @@ class Admin extends BaseController
             'join' => [
                 'users u' => 'u.id = pe.user_id',
             ],
-            'whereData' => [
-                'pe.user_id' => session('userId')
-            ],
+            'whereData' => $whereData,
             'order' => ['pe.id' => 'desc'],
         ]);
     }
@@ -361,19 +365,27 @@ class Admin extends BaseController
 
     public function getApprovalUser()
     {
-        $user = $this->db->table('users')->select('approval_1, approval_2, approval_3')->where(['id' => session('userId')])->get()->getRow();
+        try {
+            $user = $this->db->table('users')->select('approval_1, approval_2, approval_3')->where(['id' => session('userId')])->get()->getRow();
 
-        $app1Data = $this->db->table('users')->select('*')->where([EncKey('id') => $user->approval_1])->get()->getRow();
-        $app2Data = $this->db->table('users')->select('*')->where([EncKey('id') => $user->approval_2])->get()->getRow();
-        $app3Data = $this->db->table('users')->select('*')->where([EncKey('id') => $user->approval_3])->get()->getRow();
+            $app1Data = $this->db->table('users')->select('*')->where([EncKey('id') => $user->approval_1])->get()->getRow();
+            $app2Data = $this->db->table('users')->select('*')->where([EncKey('id') => $user->approval_2])->get()->getRow();
+            $app3Data = $this->db->table('users')->select('*')->where([EncKey('id') => $user->approval_3])->get()->getRow();
 
-        $approval = [
-            'approval_1' => $app1Data->nip . " - " . $app1Data->nama,
-            'approval_2' => $app2Data->nip . " - " . $app2Data->nama,
-            'approval_3' => $app3Data->nip . " - " . $app3Data->nama,
-        ];
-
-        return json_encode($approval);
+            $approval = [
+                'approval_1' => $app1Data->nip . " - " . $app1Data->nama,
+                'approval_2' => $app2Data->nip . " - " . $app2Data->nama,
+                'approval_3' => $app3Data->nip . " - " . $app3Data->nama,
+            ];
+        } catch (\Throwable | \Exception $th) {
+            $approval = [
+                'approval_1' => "Belum diatur",
+                'approval_2' => "Belum diatur",
+                'approval_3' => "Belum diatur",
+            ];
+        } finally {
+            return json_encode($approval);
+        }
     }
 
     public function getYears()

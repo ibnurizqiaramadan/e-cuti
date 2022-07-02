@@ -106,9 +106,9 @@ $(document).ready(function () {
                 orderable: !0,
                 render: function (data, type, row) {
                     let approval = {
-                        0: "progress|info",
-                        1: "diterima|success",
-                        2: "ditolak|danger",
+                        0: `<i class="fas fa-sync mr-1"></i> progress|info`,
+                        1: `<i class="fas fa-check mr-1"></i> diterima|success`,
+                        2: `<i class="fas fa-times mr-1"></i> ditolak|danger`,
                         3: "ditangguhkan",
                         4: "perubahan",
                     };
@@ -122,11 +122,12 @@ $(document).ready(function () {
                 targets: [6],
                 orderable: !0,
                 render: function (data, type, row) {
-                    let btn = `<button class='btn btn-info btn-sm' id='detail' data-id="${row.id}" title='Lihat Detail'><i class='fas fa-eye'></i></button>`;
+                    let btn = `<button class='btn btn-info btn-sm' id='detail' data-id="${row.id}" title='Lihat Detail'><i class='fas fa-eye mr-1'></i> Lihat</button>`;
                     if (row.approval == 1) {
-                        btn += `<button class='btn btn-success btn-sm ml-2' id='print' data-id="${row.id}" title='Print Pengajuan'><i class='fas fa-print'></i></button>`;
+                        btn += `<button class='btn btn-success btn-sm' id='print' data-id="${row.id}" title='Print Pengajuan'><i class='fas fa-print mr-1'></i> Print</button>`;
                     }
-                    return btn;
+                    let html = `<div class="d-flex justify-content-around"> ${btn} </div>`;
+                    return html;
                 },
             },
         ],

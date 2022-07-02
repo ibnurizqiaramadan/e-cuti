@@ -54,6 +54,8 @@ class Login extends BaseController
                 'level' => $userData->level,
             ];
 
+            cekTahun($userData->id);
+
             // Update($this->table, ['token' => $token], ['id' => $userData->id]);
 
             session()->set($session);

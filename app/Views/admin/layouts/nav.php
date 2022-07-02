@@ -43,6 +43,24 @@
                 </li>
             </ul>
         </li>
+        <li class="nav-item <?= (($menu ?? '') == 'cuti') ? 'menu-open' : ''; ?>">
+            <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-paper-plane"></i>
+                <p>
+                    Cuti
+                    <i class="right fas fa-angle-left"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="<?= base_url(ADMIN_PATH . '/pengajuan-cuti'); ?>"
+                        class="nav-link menu-item <?= ($subMenu ?? '') == 'pengajuan' ? 'active' : ''; ?>">
+                        <i class="fas fa-copy nav-icon"></i>
+                        <p>Pengajuan Cuti</p>
+                    </a>
+                </li>
+            </ul>
+        </li>
         <?php endif; ?>
         <?php if (session('level') != '2') : ?>
         <li class="nav-item <?= (($menu ?? '') == 'cuti') ? 'menu-open' : ''; ?>">

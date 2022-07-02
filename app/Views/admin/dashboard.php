@@ -6,14 +6,16 @@
     <?php if (session('level') == '2') : ?>
     <div class="card shadow border-0">
         <div class="card-body">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere cumque pariatur, laudantium voluptas eius
-            officia eos, aspernatur numquam provident autem aliquam animi maiores iusto vel fuga quas laboriosam! Animi,
-            rerum!
+            <h5 class="m-0">Selamat datang <?= session('nama') ?></h5>
         </div>
     </div>
     <?php endif; ?>
     <?php if (session('level') != '2') : ?>
-    <!-- <h4>Selamat datang <?= session('nama') ?></h3> -->
+    <div class="card shadow">
+        <div class="card-body">
+            <h5 class="m-0">Selamat datang <?= session('nama') ?></h5>
+        </div>
+    </div>
     <div class="row">
 
         <?php foreach ($cuti as $key) : ?>
@@ -34,6 +36,43 @@
         </div>
 
         <?php endforeach; ?>
+    </div>
+    <div class="row">
+        <div class="card shadow mb-0">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <div class="float-right ml-3">
+                    </div>
+                    <table id="listPengajuan" class="table table-bordered" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nama / NIP</th>
+                                <th>Jenis / Lama Cuti</th>
+                                <th>Tgl Mulai / Selesai</th>
+                                <th>File Lampiran</th>
+                                <th>Status Pengajuan</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>#</th>
+                                <th>Nama / NIP</th>
+                                <th>Jenis / Lama Cuti</th>
+                                <th>Tgl Mulai / Selesai</th>
+                                <th>File Lampiran</th>
+                                <th>Status Pengajuan</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
     <?php endif; ?>
 </div>

@@ -8,31 +8,20 @@ class Dashboard extends BaseController
 {
     public function index()
     {
-
+        $tahunMin1 = date('Y') - 1;
+        $tahunMin2 = date('Y') - 2;
         $cuti = [
             [
-                'nama' => 'Sisa Cuti Tahunan',
-                'jumlah' => 12
+                'nama' => "Sisa $tahunMin2",
+                'jumlah' => getSisaJatahTahunan($tahunMin2, session('userId'))
             ],
             [
-                'nama' => 'Besar',
-                'jumlah' => 0
+                'nama' => "Sisa $tahunMin1",
+                'jumlah' => getSisaJatahTahunan($tahunMin1, session('userId'))
             ],
             [
-                'nama' => 'Sakit',
-                'jumlah' => 0
-            ],
-            [
-                'nama' => 'Melahirkan',
-                'jumlah' => 0
-            ],
-            [
-                'nama' => 'Karena Alasan Penting',
-                'jumlah' => 0
-            ],
-            [
-                'nama' => 'Diluar Tanggungan Negara',
-                'jumlah' => 0
+                'nama' => 'Total',
+                'jumlah' => getJatahTahunan(session('userId'))
             ]
         ];
 

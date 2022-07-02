@@ -137,7 +137,7 @@ function getSisaJatahTahunan($tahun, $userId)
 {
     $CI = new db();
     // echo $tahun . " | " . $userId;
-    return $CI->db->table('cuti_tahunan')->where(['tahun' => $tahun, 'user_id' => $userId])->get()->getRow()->sisa ?? '-';
+    return $CI->db->table('cuti_tahunan')->where(['tahun' => $tahun, 'user_id' => $userId])->orderby('id', 'desc')->get()->getRow()->sisa ?? '-';
 }
 
 function getJatahTahunan($userId)
@@ -145,6 +145,24 @@ function getJatahTahunan($userId)
     $CI = new db();
     // echo $tahun . " | " . $userId;
     return $CI->db->table('users')->where(['id' => $userId])->get()->getRow()->cuti_tahun_jatah ?? '-';
+}
+
+function cekTahun($userId)
+{
+    $user = (object) Where('users', ['id' => $userId]);
+    if ($user->cuti_tahun < date('Y')) {
+        $sisaTahunLalu = $user->cuti_tahun_jatah;
+        Create('cuti_tahunan', [
+            'user_id' => $userId,
+            'tahun' => $user->cuti_tahun,
+            'sisa' => $sisaTahunLalu
+        ]);
+        $sisaCutiBaru = $sisaTahunLalu > 6 ? 6 : $user->cuti_tahun_jatah;
+        Update('users', [
+            'cuti_tahun_jatah' => ($sisaCutiBaru + 6),
+            'cuti_tahun' => date('Y')
+        ], ['id' => $userId]);
+    }
 }
 
 /**

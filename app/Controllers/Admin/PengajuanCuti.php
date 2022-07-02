@@ -111,7 +111,7 @@ class PengajuanCuti extends BaseController
             $message = [
                 'status' => 'ok',
                 'message' => "Berhasil membuat pengajuan",
-                'pengajuanId' => $pengajuanId = $this->db->insertID()
+                'pengajuanId' => Enc($pengajuanId)
             ];
         } catch (\Throwable | \Exception $error) {
             $message = [
@@ -305,8 +305,15 @@ class PengajuanCuti extends BaseController
             $idPengajuan = $this->db->table('approval_pengajuan')->where([EncKey('id') => Input_('approval')])->get()->getRow()->pengajuan_id;
             if (Input_('status') != '1') {
                 // Update('approval_pengajuan', ['status' => Input_('status')], ['pengajuan_id' => $idPengajuan]);
-                $this->db->table('approval_pengajuan')->set(['status' => Input_('status')])->where(['pengajuan_id' => $idPengajuan])->update();
+                $cuti = $this->db->table('pengajuan')->select('lama, jenis_cuti, user_id')->where(['id' => $idPengajuan])->get()->getRow();
+                if ($cuti->jenis_cuti == '0') {
+                    $tempUser = (object) Where('users', ['id' => $cuti->user_id]);
+                    $sisaJatahCuti = $tempUser->cuti_tahun_jatah;
+                    $total = $sisaJatahCuti + $cuti->lama;
+                    Update('users', ['cuti_tahun_jatah' => $total], ['id' => $cuti->user_id]);
+                }
                 Update('pengajuan', ['approval' => Input_('status')], ['id' => $idPengajuan]);
+                $this->db->table('approval_pengajuan')->set(['status' => Input_('status')])->where(['pengajuan_id' => $idPengajuan])->update();
             }
 
             if (count($this->db->table('approval_pengajuan')->where(['pengajuan_id' => $idPengajuan, 'status' => '1'])->get()->getResult()) == 3) {

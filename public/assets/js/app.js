@@ -9,7 +9,8 @@ var table = "",
     table1 = "",
     CURRENT_PATH,
     refreshTableInterval,
-    tableId;
+    tableId,
+    inputIdPengajuan;
 var htmlEditor = "",
     cssEditor = "",
     jsEditor = "";
@@ -473,7 +474,7 @@ function addFormInput(formBody, inputForm = {}) {
                 }>`,
                 file: `<div class="custom-file"><input type="file" class="custom-file-input ${
                     options.class
-                }" name="${options.name ?? ""}" ${
+                }" ${options.attr ?? ""} name="${options.name ?? ""}" ${
                     options.id ? `id="${options.id}"` : ""
                 } ${
                     options.required ?? ""

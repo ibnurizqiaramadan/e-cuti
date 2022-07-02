@@ -93,7 +93,7 @@ $(document).ready(function () {
                     let approval = [
                         "Approval 1",
                         "Approval Atasan",
-                        "Approval Pejabat Berwenam",
+                        "Approval Pejabat Berwenang",
                     ];
                     return `${approval[row.urut - 1]}`;
                 },

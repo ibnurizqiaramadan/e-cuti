@@ -61,8 +61,11 @@ function addFormDokumenPendukung() {
     addFormInput("#formDokumenPendukung", [
         {
             type: "file",
+            name: "",
             id: "dokumenPendukung",
-            label: "Dokumen Pendukung (Max. 3MB)",
+            label: "Dokumen Pendukung pdf (Max. 3MB)",
+            // attr: `accept="application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,text/plain, application/pdf, image/*"`,
+            attr: `accept="application/pdf"`,
         },
     ]);
 }
@@ -73,19 +76,16 @@ function addFormApproval() {
         {
             type: "text",
             name: "approval_1",
-            attr: "disabled",
             label: "Approval 1",
         },
         {
             type: "text",
             name: "approval_2",
-            attr: "disabled",
             label: "Approval 2",
         },
         {
             type: "text",
             name: "approval_2",
-            attr: "disabled",
             label: "Approval 2",
         },
     ]);
@@ -105,14 +105,11 @@ $(document).ready(function () {
         contentType: !1,
         cache: !1,
         dataType: "JSON",
-        beforeSend: function () {
-            disableButton();
-        },
-        complete: function () {
-            enableButton();
-        },
         success: function (e) {
             fillForm(e);
+            if (e.approval_1 == "Belum diatur") {
+                disableButton();
+            }
         },
         error: function (err) {
             errorCode(err);
@@ -123,6 +120,19 @@ $(document).ready(function () {
 $(`#formInput`).submit(function (e) {
     e.preventDefault();
     let formData = new FormData(this);
+    const fi = document.getElementById("dokumenPendukung");
+    if (fi.files.length > 0) {
+        for (let i = 0; i <= fi.files.length - 1; i++) {
+            let fsize = fi.files.item(i).size;
+            let file = Math.round(fsize / 1024);
+            if (file > 3072) {
+                toastWarning(
+                    "Ukuran berkas pendukung tidak boleh lebih dari 3MB"
+                );
+                return;
+            }
+        }
+    }
     $.ajax({
         url: $(this).attr("action"),
         type: "post",
@@ -142,7 +152,7 @@ $(`#formInput`).submit(function (e) {
                 e.validate.success == true
                     ? "ok" == e.status
                         ? toastSuccess(e.message)
-                        : //   clearInput(e.validate.input)
+                        : // clearInput(e.validate.input)
                           toastWarning(e.message)
                     : toastWarning(e.message);
         },

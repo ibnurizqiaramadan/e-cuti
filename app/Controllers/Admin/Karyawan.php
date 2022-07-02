@@ -46,7 +46,10 @@ class Karyawan extends BaseController
                 'approval_1' => '',
                 'approval_2' => '',
                 'approval_3' => '',
-            ], ['password' => Enc('123456')]);
+            ], [
+                'password' => Enc('123456'),
+                'cuti_tahun' => date('Y')
+            ]);
 
             $user = $this->db->table($this->table)->where('email', Input_('email'))->get()->getRow();
             if ($user) $validate = ValidateAdd($validate, 'email', 'Email ada yang sama');
