@@ -392,6 +392,21 @@ $(document).ready(function () {
         clearFormInput("#formBody");
         addFormInput("#formBody", [
             {
+                type: "text",
+                name: "nickName",
+                label: "Nickname",
+            },
+            {
+                type: "select2",
+                name: "jomblo",
+                label: "Status Jomblo",
+                data: {
+                    0: "Jomblo",
+                    1: "Dalam Hubungan",
+                    2: "Rusak",
+                },
+            },
+            {
                 type: "email",
                 name: "email",
                 label: "Email",

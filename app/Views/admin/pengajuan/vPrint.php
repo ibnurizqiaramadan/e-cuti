@@ -99,7 +99,9 @@ body {
         <div class="col-5 d-flex justify-content-end">
             <table>
                 <tr>
-                    <td colspan="2" class="text-center">Jakarta, <?= date('d M Y') ?></td>
+                    <td colspan="2" class="text-center">Jakarta,
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </td>
                 </tr>
                 <tr>
                     <td colspan="2" class="text-center pt-2">Kepada</td>
@@ -120,12 +122,14 @@ body {
         <tr>
             <td class="fw-bold">Nomor</td>
             <td class="px-3">:</td>
-            <td>E - <?= $nomorPengajuan ?></td>
+            <td></td>
+            <!-- <td>E - <?= $nomorPengajuan ?></td> -->
         </tr>
         <tr>
             <td>Tanggal</td>
             <td class="px-3">:</td>
-            <td><?= date('d F Y', strtotime($data->pengajuan_dibuat)) ?></td>
+            <td></td>
+            <!-- <td><?= date('d F Y', strtotime($data->pengajuan_dibuat)) ?></td> -->
         </tr>
     </table>
 
@@ -327,7 +331,7 @@ body {
         </tr>
     </table>
 
-    <script>
+    <!-- <script>
     window.print()
-    </script>
+    </script> -->
 </body>
