@@ -4,17 +4,17 @@ moveRoom(tableId);
 
 $(document).ready(function () {
     table = $(tableId).DataTable({
-        searching: false,
+        searching: true,
         info: false,
         pagging: false,
         lengthChange: false,
         ordering: false,
-        dom: "lfrti",
+        // dom: "lfrti",
         processing: !0,
         serverSide: !0,
         order: [],
         ajax: {
-            url: API_PATH + "data/pengajuan-dashboard",
+            url: `${API_PATH}/data/pengajuan-dashboard`,
             type: "POST",
             data: {
                 _token: TOKEN,
@@ -114,6 +114,43 @@ $(document).ready(function () {
                 },
             },
         ],
+    });
+    $.ajax({
+        url: API_PATH + "data/options/unit-kerja",
+        type: "POST",
+        dataType: "JSON",
+        success: function (result) {
+            selectOptionList =
+                "<option value='all' selected>Semua Unit Kerja</option>";
+            Object.keys(result.data).forEach((index) => {
+                let caption = "{nama}";
+                let value = "";
+                const row = result.data[index];
+                Object.keys(row).forEach((field) => {
+                    caption = caption.replace(
+                        new RegExp(`{${field}}`, "g"),
+                        row[field]
+                    );
+                });
+                value = row["id"];
+                selectOptionList += `<option value='${value}'>${caption}</option>`;
+                $(`#unitKerjaId`).html(selectOptionList);
+            });
+        },
+        error: function (err) {
+            errorCode(err);
+            console.log("he");
+        },
+    });
+    $(".select2").select2({ theme: "bootstrap4" });
+    $("#unitKerjaId").change(function () {
+        const id = $(this).val();
+        if (id == "all")
+            table.ajax.url(`${API_PATH}/data/pengajuan-dashboard`).load();
+        else
+            table.ajax
+                .url(`${API_PATH}/data/pengajuan-dashboard?unitkerja=${id}`)
+                .load();
     });
 });
 

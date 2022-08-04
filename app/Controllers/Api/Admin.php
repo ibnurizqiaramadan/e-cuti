@@ -307,6 +307,13 @@ class Admin extends BaseController
             ];
         }
 
+        if (session('level') == 2 && isset($_GET['unitkerja'])) {
+            $whereData = [
+                'pe.approval' => '1',
+                EncKey('u.unit_kerja_id') => $_GET['unitkerja']
+            ];
+        }
+
         return $this->dataTables([
             'table' => 'pengajuan pe',
             'selectData' => 'pe.id, u.nama, u.nip, pe.tgl_mulai, pe.tgl_selesai, pe.jenis_cuti, pe.file_lampiran, pe.approval, pe.lama, pe.alasan, pe.alamat_cuti',

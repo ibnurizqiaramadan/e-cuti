@@ -41,13 +41,15 @@
     <div class="row">
         <div class="col-12">
             <div class="card shadow mb-0">
-                <div class="card-header">
+                <div class="card-header d-flex justify-content-between align-items-center">
                     Pengajuan diterima
+                    <div class="ml-auto w-50">
+                        <select name="" id="unitKerjaId" class="form-control select2">
+                        </select>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <div class="float-right ml-3">
-                        </div>
                         <table id="listPengajuanDashboard" class="table table-bordered" style="width:100%">
                             <thead>
                                 <tr>
