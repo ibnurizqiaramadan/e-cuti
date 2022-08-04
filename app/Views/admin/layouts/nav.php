@@ -108,6 +108,14 @@
                 </p>
             </a>
         </li>
+        <li class="nav-item">
+            <a target="_blank" href="<?= base_url('/assets/Panduan_e-Cuti.pdf'); ?>" class="nav-link menu-item">
+                <i class="nav-icon fas fa-clipboard-check"></i>
+                <p>
+                    Panduan
+                </p>
+            </a>
+        </li>
     </ul>
 </nav>
 <!-- /.sidebar-menu -->
