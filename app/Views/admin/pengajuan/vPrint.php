@@ -331,7 +331,7 @@ body {
         </tr>
     </table>
 
-    <!-- <script>
+    <script>
     window.print()
-    </script> -->
+    </script>
 </body>
