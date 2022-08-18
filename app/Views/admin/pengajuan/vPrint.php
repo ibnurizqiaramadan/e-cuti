@@ -100,7 +100,8 @@ body {
             <table>
                 <tr>
                     <td colspan="2" class="text-center">Jakarta,
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
+                        <?= date('d F Y', strtotime($data->pengajuan_dibuat)) ?>
                     </td>
                 </tr>
                 <tr>
@@ -122,14 +123,14 @@ body {
         <tr>
             <td class="fw-bold">Nomor</td>
             <td class="px-3">:</td>
-            <td></td>
-            <!-- <td>E - <?= $nomorPengajuan ?></td> -->
+            <!-- <td></td> -->
+            <td>E - <?= $nomorPengajuan ?></td>
         </tr>
         <tr>
             <td>Tanggal</td>
             <td class="px-3">:</td>
-            <td></td>
-            <!-- <td><?= date('d F Y', strtotime($data->pengajuan_dibuat)) ?></td> -->
+            <!-- <td></td> -->
+            <td><?= date('d F Y', strtotime($data->pengajuan_dibuat)) ?></td>
         </tr>
     </table>
 
