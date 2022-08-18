@@ -469,7 +469,7 @@ function Validate($data, $guarded = [])
     }
 }
 
-function getBetweenDates($startDate, $endDate)
+function getBetweenDates($startDate, $endDate, $ignoreWeekDays = false)
 {
     $rangArray = [];
 
@@ -481,9 +481,14 @@ function getBetweenDates($startDate, $endDate)
         $currentDate <= $endDate;
         $currentDate += (86400)
     ) {
-
-        $date = date('Y-m-d', $currentDate);
-        $rangArray[] = $date;
+        if ($ignoreWeekDays == true) {
+            $date = date('Y-m-d', $currentDate);
+            $dateName = strtolower(date("D", $currentDate));
+            if (!in_array($dateName, ['sat', 'sun'])) $rangArray[] = $date;
+        } else {
+            $date = date('Y-m-d', $currentDate);
+            $rangArray[] = $date;
+        }
     }
 
     return $rangArray;

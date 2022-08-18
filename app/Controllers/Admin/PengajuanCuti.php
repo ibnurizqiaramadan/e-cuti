@@ -60,10 +60,10 @@ class PengajuanCuti extends BaseController
                 'kontak' => 'required|number',
             ], [
                 'user_id' => session('userId'),
-                'lama' => count(getBetweenDates(Input_('tgl_mulai'), Input_('tgl_selesai')))
+                'lama' => count(getBetweenDates(Input_('tgl_mulai'), Input_('tgl_selesai'), true))
             ]);
 
-            $lamaCuti = count(getBetweenDates(Input_('tgl_mulai'), Input_('tgl_selesai')));
+            $lamaCuti = count(getBetweenDates(Input_('tgl_mulai'), Input_('tgl_selesai'), true));
 
             $tglMulai = date('Y-m-d', strtotime(Input_('tgl_mulai')));
             $tglSelesai = date('Y-m-d', strtotime(Input_('tgl_selesai')));
